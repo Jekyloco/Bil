@@ -1,15 +1,18 @@
 package com.jekyloco.service;
 
-import com.jekyloco.dao.UserMapper;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.jekyloco.domain.User;
 
-@Service
-public class UserService {
-    @Autowired
-    UserMapper userMapper;
+public interface UserService {
 
-    public String getName(Long id) {
-        return userMapper.getName(id);
-    }
+    String getName(Long id);
+
+//    User getUserByPhone(String phone);
+
+    void addUser(User user);
+
+    String login(User user) throws Exception;
+
+    User getUserById(Long userId);
+
+
 }
