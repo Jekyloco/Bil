@@ -1,5 +1,7 @@
 package com.jekyloco.service;
 
+import com.alibaba.fastjson.JSONObject;
+import com.jekyloco.domain.PageResult;
 import com.jekyloco.domain.User;
 import com.jekyloco.domain.UserInfo;
 
@@ -22,6 +24,8 @@ public interface UserService {
 
     void updateUserInfos(UserInfo userInfo);
 
-    List<UserInfo> getUserInfoByUserId(Set<Long> userIdList);
+    List<UserInfo> getUserInfoByUserIds(Set<Long> userIdList);
+
+    PageResult<UserInfo> pageListUserInfos(JSONObject params);
 
 }

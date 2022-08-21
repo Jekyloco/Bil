@@ -1,19 +1,20 @@
 package com.jekyloco.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.jekyloco.constant.UserConstant;
+import com.jekyloco.domain.PageResult;
 import com.jekyloco.domain.User;
 import com.jekyloco.dao.UserDao;
 import com.jekyloco.domain.UserInfo;
 import com.jekyloco.exception.ConditionException;
-import com.jekyloco.service.UserService;
 import com.jekyloco.service.util.MD5Util;
 import com.jekyloco.service.util.RSAUtil;
-import com.jekyloco.service.util.RsaUtils;
 import com.jekyloco.service.util.TokenUtil;
 import com.mysql.cj.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -121,7 +122,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserInfo> getUserInfoByUserId(Set<Long> userIdList) {
-        return userDao.getUserInfoByUserId(userIdList);
+    public List<UserInfo> getUserInfoByUserIds(Set<Long> userIdList) {
+        return userDao.getUserInfoByUserIds(userIdList);
+    }
+
+    @Override
+    public PageResult<UserInfo> pageListUserInfos(JSONObject params) {
+        Integer no = params.getInteger("no");
+        Integer size = params.getInteger("size");
+        params.put("start", (no - 1) * size);
+        params.put("limit", size);
+        Integer total = userDao.pageCountUserInfo(params);
+        List<UserInfo> list = new ArrayList<>();
+        if (total > 0) {
+            list = userDao.pageListUserInfos(params);
+        }
+        return new PageResult<>(total, list);
     }
 }

@@ -69,7 +69,7 @@ public class UserFollowingService {
         //根据关注用户的id查询关注用户的基本信息
         List<UserInfo> userInfoList = new ArrayList<>();
         if (followingIdSet.size() > 0) {
-            userInfoList = userService.getUserInfoByUserId(followingIdSet);
+            userInfoList = userService.getUserInfoByUserIds(followingIdSet);
         }
         for (UserFollowing userFollowing : list) {
             for (UserInfo userInfo : userInfoList) {
@@ -89,7 +89,7 @@ public class UserFollowingService {
         for (FollowingGroup group : groupList) {
             List<UserInfo> infoList = new ArrayList<>();
             for (UserFollowing userFollowing : list) {
-                if (group.getUserId().equals(userFollowing.getUserId())) {
+                if (group.getId().equals(userFollowing.getGroupId())) {
                     infoList.add(userFollowing.getUserInfo());
                 }
             }
@@ -112,7 +112,7 @@ public class UserFollowingService {
         Set<Long> fanIdSet = fanList.stream().map(UserFollowing::getUserId).collect(Collectors.toSet());
         List<UserInfo> userInfoList = new ArrayList<>();
         if (fanIdSet.size() > 0) {
-            userInfoList = userService.getUserInfoByUserId(fanIdSet);
+            userInfoList = userService.getUserInfoByUserIds(fanIdSet);
         }
         List<UserFollowing> followingList = userFollowingDao.getUserFollowings(userId);
         for (UserFollowing fan : fanList) {
@@ -131,5 +131,29 @@ public class UserFollowingService {
             }
         }
         return fanList;
+    }
+
+    public Long addUserFollowingGroups(FollowingGroup followingGroup) {
+        followingGroup.setCreateTime(new Date());
+        followingGroup.setType(UserConstant.USER_FOLLOWING_GROUP_TYPE_USER);
+        followingGroupService.addFollowingGroup(followingGroup);
+        return followingGroup.getId();
+    }
+
+    public List<FollowingGroup> getUserFollowingGroups(Long userId) {
+        return followingGroupService.getUserFollowingGroups(userId);
+    }
+
+    public List<UserInfo> checkFollowingStatus(List<UserInfo> userInfoList, Long userId) {
+        List<UserFollowing> userFollowingList = userFollowingDao.getUserFollowings(userId);
+        for (UserInfo userInfo : userInfoList) {
+            userInfo.setFollowed(false);
+            for (UserFollowing userFollowing : userFollowingList) {
+                if (userFollowing.getFollowingId().equals(userInfo.getUserId())) {
+                    userInfo.setFollowed(true);
+                }
+            }
+        }
+        return userInfoList;
     }
 }

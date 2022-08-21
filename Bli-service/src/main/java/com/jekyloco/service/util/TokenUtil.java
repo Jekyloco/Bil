@@ -26,7 +26,9 @@ public class TokenUtil {
         Algorithm algorithm = Algorithm.RSA256(RSAUtil.getPublicKey(), RSAUtil.getPrivateKey());
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.add(Calendar.SECOND, 120);
+        //token有效时间,second;
+        //利用postman测试: 有效时间为1h
+        calendar.add(Calendar.SECOND, 3600);
         return JWT.create().withKeyId(String.valueOf(userId))
                 .withIssuer(ISSUER)
                 .withExpiresAt(calendar.getTime())

@@ -15,7 +15,7 @@ import java.security.spec.X509EncodedKeySpec;
  * 加密解密两种方式：①公钥加密，私钥解密（常用）。②私钥加密，公钥解密。
  * @date 2020-05-18
  **/
-public class RsaUtils {
+public class RsaUtils_unUse {
 
     private static final String SRC = "123456";
 
@@ -35,12 +35,12 @@ public class RsaUtils {
      */
     private static void test1(RsaKeyPair keyPair) throws Exception {
         System.out.println("***************** 公钥加密私钥解密开始 *****************");
-        String text1 = encryptByPublicKey(keyPair.getPublicKey(), RsaUtils.SRC);
+        String text1 = encryptByPublicKey(keyPair.getPublicKey(), RsaUtils_unUse.SRC);
         String text2 = decryptByPrivateKey(keyPair.getPrivateKey(), text1);
-        System.out.println("加密前：" + RsaUtils.SRC);
+        System.out.println("加密前：" + RsaUtils_unUse.SRC);
         System.out.println("加密后：" + text1);
         System.out.println("解密后：" + text2);
-        if (RsaUtils.SRC.equals(text2)) {
+        if (RsaUtils_unUse.SRC.equals(text2)) {
             System.out.println("解密字符串和原始字符串一致，解密成功");
         } else {
             System.out.println("解密字符串和原始字符串不一致，解密失败");
@@ -54,12 +54,12 @@ public class RsaUtils {
      */
     private static void test2(RsaKeyPair keyPair) throws Exception {
         System.out.println("***************** 私钥加密公钥解密开始 *****************");
-        String text1 = encryptByPrivateKey(keyPair.getPrivateKey(), RsaUtils.SRC);
+        String text1 = encryptByPrivateKey(keyPair.getPrivateKey(), RsaUtils_unUse.SRC);
         String text2 = decryptByPublicKey(keyPair.getPublicKey(), text1);
-        System.out.println("加密前：" + RsaUtils.SRC);
+        System.out.println("加密前：" + RsaUtils_unUse.SRC);
         System.out.println("加密后：" + text1);
         System.out.println("解密后：" + text2);
-        if (RsaUtils.SRC.equals(text2)) {
+        if (RsaUtils_unUse.SRC.equals(text2)) {
             System.out.println("解密字符串和原始字符串一致，解密成功");
         } else {
             System.out.println("解密字符串和原始字符串不一致，解密失败");
