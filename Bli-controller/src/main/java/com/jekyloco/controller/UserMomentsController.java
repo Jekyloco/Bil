@@ -1,11 +1,13 @@
 package com.jekyloco.controller;
 
+import com.jekyloco.constant.AuthRoleConstant;
 import com.jekyloco.controller.support.UserSupport;
 import com.jekyloco.domain.JsonResponse;
 import com.jekyloco.domain.UserMoment;
+import com.jekyloco.domain.annotation.ControllerLimitedRole;
+import com.jekyloco.domain.annotation.DataLimited;
 import com.jekyloco.service.UserMomentsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,6 +24,8 @@ public class UserMomentsController {
     @Autowired
     private UserSupport userSupport;
 
+    @ControllerLimitedRole(limitedRoleCodeList = {AuthRoleConstant.ROLE_LV0})
+    @DataLimited
     @PostMapping("/user-moments")
     public JsonResponse<String> addUserMoments(@RequestBody UserMoment userMoment) throws Exception {
         Long userId = userSupport.getCurrentUserId();

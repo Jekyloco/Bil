@@ -49,32 +49,29 @@ public class RocketMQConfig {
         DefaultMQPushConsumer consumer = new DefaultMQPushConsumer(UserMomentsConstant.GROUP_MOMENTS);
         consumer.setNamesrvAddr(nameServerAddr);
         consumer.subscribe(UserMomentsConstant.TOPIC_MOMENTS, "*");
-        consumer.registerMessageListener(new MessageListenerConcurrently() {
-            @Override
-            public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-                MessageExt messageExt = msgs.get(0);
-                if (messageExt == null) {
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-                String bodyStr = new String(messageExt.getBody());
-                UserMoment userMoment = JSONObject.toJavaObject(JSONObject.parseObject(bodyStr), UserMoment.class);
-                Long userId = userMoment.getUserId();
-                List<UserFollowing> fanList = userFollowingService.getUserFans(userId);
-                for (UserFollowing fan : fanList) {
-                    String key = "subscribed-" + fan.getUserId();
-                    String subscribedListStr = redisTemplate.opsForValue().get(key);
-                    List<UserMoment> subscribedList;
-                    if (StringUtils.isNullOrEmpty(subscribedListStr)) {
-                        subscribedList = new ArrayList<>();
-                    } else {
-                        subscribedList = JSONArray.parseArray(subscribedListStr, UserMoment.class);
-                    }
-                    subscribedList.add(userMoment);
-                    redisTemplate.opsForValue().set(key, JSONObject.toJSONString(subscribedList));
-                }
-
+        consumer.registerMessageListener((MessageListenerConcurrently) (msgs, context) -> {
+            MessageExt messageExt = msgs.get(0);
+            if (messageExt == null) {
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             }
+            String bodyStr = new String(messageExt.getBody());
+            UserMoment userMoment = JSONObject.toJavaObject(JSONObject.parseObject(bodyStr), UserMoment.class);
+            Long userId = userMoment.getUserId();
+            List<UserFollowing> fanList = userFollowingService.getUserFans(userId);
+            for (UserFollowing fan : fanList) {
+                String key = "subscribed-" + fan.getUserId();
+                String subscribedListStr = redisTemplate.opsForValue().get(key);
+                List<UserMoment> subscribedList;
+                if (StringUtils.isNullOrEmpty(subscribedListStr)) {
+                    subscribedList = new ArrayList<>();
+                } else {
+                    subscribedList = JSONArray.parseArray(subscribedListStr, UserMoment.class);
+                }
+                subscribedList.add(userMoment);
+                redisTemplate.opsForValue().set(key, JSONObject.toJSONString(subscribedList));
+            }
+
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         });
         consumer.start();
         return consumer;

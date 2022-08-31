@@ -22,7 +22,10 @@ import java.util.Set;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserDao userDao;
+    private UserDao userDao;
+
+    @Autowired
+    private UserAuthService userAuthService;
 
     @Override
     public String getName(Long id) {
@@ -64,6 +67,9 @@ public class UserServiceImpl implements UserService {
         userInfo.setGender(UserConstant.GENDER_MALE);
         userInfo.setCreateTime(now);
         userDao.addUserInfo(userInfo);
+
+        //创建用户时添加用户默认权限角色 Lv0
+        userAuthService.addUserDefaultRole(user.getId());
     }
 
     @Override
