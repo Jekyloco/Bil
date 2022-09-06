@@ -6,10 +6,17 @@ spring:
     username: root
     password: he2002258
 
+
   redis:
     host: 127.0.0.1
     port: 6379
     password:
+
+  servlet:
+    multipart:
+      max-file-size: 50MB
+      max-request-size: 50MB
+
 
 server:
   port: 8086
@@ -18,4 +25,7 @@ rocketmq:
   name:
     server:
       address: 127.0.0.1:9876
+
+fdfs:
+  tracker-list: 192.168.189.128:22122
 

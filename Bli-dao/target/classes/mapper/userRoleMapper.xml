@@ -9,4 +9,9 @@
                  left join t_auth_role ar on ur.roleId = ar.id
         where ur.userId = #{userId};
     </select>
+
+    <insert id="addUserRole" parameterType="com.jekyloco.domain.auth.UserRole">
+        insert into t_user_role(userId, roleId, createTime)
+        values (#{userId}, #{roleId}, #{createTime})
+    </insert>
 </mapper>

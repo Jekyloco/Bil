@@ -16,11 +16,8 @@ import java.util.List;
 
 /**
  * HTTP中的POST方法不具有幂等性
- * Restful接口URL命名规则
- * 1. HTTP方法后跟的URL必须是名词且统一成名词复数形式
- * 2. URL中不采用大小写混合的驼峰命名，尽量采用小写单词，使用‘-’连接多个单词
+ * Restful接口
  */
-@CrossOrigin(value = {"*"})
 @RestController
 public class UserController {
     @Autowired
